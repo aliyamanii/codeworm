@@ -1,0 +1,17 @@
+a = 2 + 3 * 4;
+print "a is ", a;
+a = 2 - 1 - 1 - 1;
+print "a is ", a;
+b = 8 / 2 / 2 / 2;
+print "b is ", b;
+a = 2 ^ 3 ^ 2 ^ b;
+print "a is ", a;
+c = 2 ^ 1 ^ 2 ^ 3;
+print "c s ", c;
+d = c ^ 3 * c;
+print "d is ", d;
+e = 3 ^ (3 / 3);
+f = c * c ^ e * e;
+print "f is ", f;
+a = 2 * 2 ^ (3 * 3)
+print "a is ", a;
