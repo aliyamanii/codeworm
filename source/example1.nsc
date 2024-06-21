@@ -15,3 +15,18 @@ f = c * c ^ e * e;
 print "f is ", f;
 a = 2 * 2 ^ (3 * 3)
 print "a is ", a;
+
+
+loop a:4 do
+begin
+ if a % 2 == 1 then
+ print "a is odd: ", a;
+ else
+ print "a is even: ", a;
+end
+
+for a of 1 to 4 do
+begin
+ if a % 2 == 1 then
+ print "a is odd: ", a;
+end

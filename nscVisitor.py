@@ -29,6 +29,11 @@ class nscVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by nscParser#cumTerm.
+    def visitCumTerm(self, ctx:nscParser.CumTermContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by nscParser#term.
     def visitTerm(self, ctx:nscParser.TermContext):
         return self.visitChildren(ctx)

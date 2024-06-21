@@ -26,17 +26,20 @@ class NscVisitorImpl:
         
         for d, c in enumerate(ctx.multiplicative()):
             right = self.visitFactor(factors[d+1])
-            if c.getText() == '*':
+            opr = c.getText()
+            if opr == '*':
                 left *= right
-            else:
+            elif opr == '/':
                 left /= right
+            else:
+                left %= right
         return left
 
     def visitParenthesizedExpression(self, ctx: nscParser.ParenthesizedExpressionContext):
         return self.visit(ctx.expr())
 
     def visitNumber(self, ctx: nscParser.NumberContext):
-        return float(ctx.NUMBER().getText())
+        return self.strToNumber(ctx.NUMBER().getText())
 
 
     def visitExponent(self, ctx):
@@ -49,7 +52,30 @@ class NscVisitorImpl:
         elif isinstance(ctx, nscParser.ParenthesizedExpressionContext):
             return self.visitParenthesizedExpression(ctx)
 
+    def getBool(self, left, right, op):
+        if op == '<':
+            return left < right
+        elif op == '>':
+            return left > right
+        elif op == '<=':
+            return left <= right
+        elif op == '>=':
+            return left >= right
+        elif op == '==':
+            return left == right
+        elif op == '!=':
+            return left != right
+        
     def visitExpr(self, ctx):
+        cumterms = list(map(self.visitCumTerm, ctx.cumTerm()))
+        left = cumterms[0]
+        if len(cumterms) < 2:
+            return left
+        for d, c in enumerate(ctx.cumopr()):
+            left = self.getBool(left, cumterms[d+1], c.getText())
+        return left
+
+    def visitCumTerm(self, ctx):
         if ctx is None:
             return 0
         terms = ctx.term()

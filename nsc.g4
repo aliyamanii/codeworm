@@ -22,7 +22,8 @@ statement
     ;
 
 // Expression with separated operators
-expr: term (additive term)*;
+expr: cumTerm (cumopr cumTerm)*; 
+cumTerm: term (additive term)*;
 term: factor (multiplicative factor)*;
 factor: exponent ('^' exponent)*;
 exponent: '(' expr ')' # ParenthesizedExpression
@@ -53,5 +54,5 @@ loop_statement: 'loop' ID ':' NUMBER 'do' statement;
 
 // Operator rules
 cumopr : '>' | '<=' | '>=' | '==' | '!=' | '<' ;
-multiplicative : '*' | '/' ;
+multiplicative : '*' | '/' | '%';
 additive : '+' | '-' ;

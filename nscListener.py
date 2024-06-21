@@ -44,6 +44,15 @@ class nscListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by nscParser#cumTerm.
+    def enterCumTerm(self, ctx:nscParser.CumTermContext):
+        pass
+
+    # Exit a parse tree produced by nscParser#cumTerm.
+    def exitCumTerm(self, ctx:nscParser.CumTermContext):
+        pass
+
+
     # Enter a parse tree produced by nscParser#term.
     def enterTerm(self, ctx:nscParser.TermContext):
         pass

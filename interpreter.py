@@ -36,14 +36,15 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
             self.visitStatements(c.statements())
 
         elif c := ctx.if_else_statement():
+            statements = c.statement()
             if self.visitExpr(c.expr()):
                 self.visitStatement(c.statement(0))
-            elif c.ELSE():
+            elif len(statements) > 1:
                 self.visitStatement(c.statement(1))
                 
         elif c := ctx.while_statement():
             while self.visitExpr(c.expr()):
-                self.visitStatement(c.statement(0))
+                self.visitStatement(c.statement())
 
         elif c := ctx.for_statement():
             var_name = c.ID().getText()
@@ -85,10 +86,23 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
 
             self.print_output(" ".join(output))
 
+    def visitID(self, ctx):
+        var_name = ctx.getText()
+        if var_name in self.variables:
+            return self.variables[var_name]
+        return NameError('not found')
+
+
+    def strToNumber(self, s):
+        try:
+            return int(s)
+        except ValueError:
+            return float(s)
+        
     def visitExpra(self, ctx: nscParser.ExprContext):
         breakpoint()
         if ctx.NUMBER():
-            return float(ctx.NUMBER().getText())
+            return self.strToNumber(ctx.NUMBER().getText())
         elif ctx.ID():
             var_name = ctx.ID().getText()
             if var_name in self.variables:
