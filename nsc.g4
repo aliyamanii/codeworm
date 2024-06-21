@@ -1,74 +1,57 @@
 grammar nsc;
 
-program: statements ;
+// Lexer rules
+ID : [a-zA-Z] [a-zA-Z0-9_]* ;
+NUMBER : [0-9]+ ('.' [0-9]+)? ;
+STRING : '"' .*? '"' ;
+WS : [ \t\n\r]+ -> skip ;
+COMMENT : '//' ~[\r\n]* -> skip ;
 
-statements: statement (statements statement)* ;
-
-statement: 
-    IDENTIFIER EQ expr SEMI
-    | BEGIN statements END
-    | IF expr THEN statement
-    | IF expr THEN statement ELSE statement
-    | WHILE expr DO statement
-    | FOR IDENTIFIER OF NUMBER TO NUMBER DO statement
-    | LOOP IDENTIFIER COLON NUMBER DO statement
-    | PRINT IDENTIFIER SEMI
-    | PRINT STRINGLITERAL COMMA IDENTIFIER SEMI
+// Parser rules
+program : statements ;
+statements : statement* ;
+statement
+    : assign_statement
+    | begin_end_statement
+    | if_else_statement
+    | while_statement
+    | for_statement
+    | loop_statement
+    | print_simple
+    | print_literal
     ;
 
-expr: 
-    expr binop expr
-    | NOT expr
-    | LPAR expr RPAR
-    | IDENTIFIER
-    | NUMBER
+// Expression with separated operators
+expr: term (additive term)*;
+term: factor (multiplicative factor)*;
+factor: exponent ('^' exponent)*;
+exponent: '(' expr ')' # ParenthesizedExpression
+    | ID # Identifier
+    | NUMBER # Number
+  //  | '-'  expr # UnaryMinus
     ;
 
-binop: 
-    PLUS | MINUS | MULT | DIV | LT | GT | LE | GE | EQEQ | NEQ | POW 
-    ;
 
+//expr  : '-' expr                 # UnaryMinus
+//      | expr ('^' expr)+         # Exponentiation
+//      | expr multiplicative expr # MultiplicationOrDivision
+//      | expr additive expr       # AdditionOrSubtraction
+//      | '(' expr ')'             # ParenthesizedExpression
+//      | expr cumopr expr         # CustomOperation
+//      | NUMBER                   # Number
+//      | ID                       # Identifier
+//      ;
 
-// Tokens
-IDENTIFIER    : [a-zA-Z] [a-zA-Z0-9_]* ;
-NUMBER        : [0-9]+ ('.' [0-9]+)? ;
-STRINGLITERAL : '"' .*? '"' ;
+assign_statement: ID '=' expr ';';
+begin_end_statement: 'begin' statements 'end';
+print_simple: 'print' ID ';';
+print_literal: 'print' STRING ',' ID ';';
+if_else_statement: 'if' expr 'then' statement ('else' statement)?;
+while_statement: 'while' expr 'do' statement;
+for_statement: 'for' ID 'of' NUMBER 'to' NUMBER 'do' statement;
+loop_statement: 'loop' ID ':' NUMBER 'do' statement;
 
-// Keywords
-BEGIN         : 'begin' ;
-END           : 'end' ;
-IF            : 'if' ;
-THEN          : 'then' ;
-ELSE          : 'else' ;
-WHILE         : 'while' ;
-DO            : 'do' ;
-FOR           : 'for' ;
-OF            : 'of' ;
-TO            : 'to' ;
-LOOP          : 'loop' ;
-PRINT         : 'print' ;
-EQ            : '=' ;
-
-// Operators
-PLUS          : '+' ;
-MINUS         : '-' ;
-MULT          : '*' ;
-DIV           : '/' ;
-LT            : '<' ;
-GT            : '>' ;
-LE            : '<=' ;
-GE            : '>=' ;
-EQEQ          : '==' ;
-NEQ           : '!=' ;
-POW           : '^' ;
-NOT           : '!' ;
-
-// Misc
-LPAR          : '(' ;
-RPAR          : ')' ;
-SEMI          : ';' ;
-COLON         : ':' ;
-COMMA         : ',' ;
-
-// Skip whitespaces and newlines
-WS            : [ \t\r\n]+ -> skip ;
+// Operator rules
+cumopr : '>' | '<=' | '>=' | '==' | '!=' | '<' ;
+multiplicative : '*' | '/' ;
+additive : '+' | '-' ;
