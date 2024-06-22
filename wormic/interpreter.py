@@ -1,9 +1,10 @@
+# interpreter.py
+
 from antlr4 import *
 from nscLexer import nscLexer
 from nscParser import nscParser
 from nscVisitor import nscVisitor
 from expr_visitor import NscVisitorImpl
-
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -109,15 +110,3 @@ def run_code(code):
         interpreter.visit(tree)
     except Exception as e:
         logging.error(e.with_traceback())
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python interpreter.py <input_file>")
-        sys.exit(1)
-
-    input_file = sys.argv[1]
-    with open(input_file, 'r') as f:
-        code = f.read()
-
-    run_code(code)
