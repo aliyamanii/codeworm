@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
-import interpreter
+import src.interpreter.interpreter as interpreter
 
 class InterpreterApp:
     def __init__(self, root):

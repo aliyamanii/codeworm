@@ -1,6 +1,6 @@
 # expr_visitor.py
 
-from nscParser import nscParser
+from grammar.nscParser import nscParser
 
 
 class NscVisitorImpl:

@@ -1,10 +1,10 @@
 # interpreter.py
 
 from antlr4 import *
-from nscLexer import nscLexer
-from nscParser import nscParser
-from nscVisitor import nscVisitor
-from expr_visitor import NscVisitorImpl
+from grammar.nscLexer import nscLexer
+from grammar.nscParser import nscParser
+from grammar.nscVisitor import nscVisitor
+from .expr_visitor import NscVisitorImpl
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -96,17 +96,18 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
 
     def print_output(self, output):
         print(output)  # Placeholder for GUI output function
+    
+    @staticmethod
+    def run_code(code):
+        input_stream = InputStream(code)
+        lexer = nscLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = nscParser(stream)
+        tree = parser.program()
 
-def run_code(code):
-    input_stream = InputStream(code)
-    lexer = nscLexer(input_stream)
-    stream = CommonTokenStream(lexer)
-    parser = nscParser(stream)
-    tree = parser.program()
+        interpreter = nscInterpreter()
 
-    interpreter = nscInterpreter()
-
-    try:
-        interpreter.visit(tree)
-    except Exception as e:
-        logging.error(e.with_traceback())
+        try:
+            interpreter.visit(tree)
+        except Exception as e:
+            logging.error(e.with_traceback())
