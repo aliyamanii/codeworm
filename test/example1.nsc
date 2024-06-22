@@ -13,7 +13,7 @@ print "d is ", d;
 e = 3 ^ (3 / 3);
 f = c * c ^ e * e;
 print "f is ", f;
-a = 2 * 2 ^ (3 * 3)
+a = 2 * 2 ^ (3 * 3);
 print "a is ", a;
 
 

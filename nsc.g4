@@ -32,17 +32,6 @@ exponent: '(' expr ')' # ParenthesizedExpression
   //  | '-'  expr # UnaryMinus
     ;
 
-
-//expr  : '-' expr                 # UnaryMinus
-//      | expr ('^' expr)+         # Exponentiation
-//      | expr multiplicative expr # MultiplicationOrDivision
-//      | expr additive expr       # AdditionOrSubtraction
-//      | '(' expr ')'             # ParenthesizedExpression
-//      | expr cumopr expr         # CustomOperation
-//      | NUMBER                   # Number
-//      | ID                       # Identifier
-//      ;
-
 assign_statement: ID '=' expr ';';
 begin_end_statement: 'begin' statements 'end';
 print_simple: 'print' ID ';';

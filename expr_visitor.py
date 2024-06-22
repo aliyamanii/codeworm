@@ -1,7 +1,6 @@
 # expr_visitor.py
 
 from nscParser import nscParser
-from nscVisitor import nscVisitor
 
 
 class NscVisitorImpl:
