@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
-import src.interpreter.interpreter as interpreter
+import  main as interpreter
 
 class InterpreterApp:
     def __init__(self, root):
@@ -25,7 +25,7 @@ class InterpreterApp:
 
             # Replace the print_output method in the interpreter to capture output in the GUI
             interpreter.nscInterpreter.print_output = self.display_output
-            interpreter.run_code(code)
+            interpreter.nscInterpreter.run_code(code)
 
     def display_output(self, output):
         self.output_area.config(state='normal')
