@@ -39,7 +39,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                 self.visitStatement(c.statement(0))
             elif len(statements) > 1:
                 self.visitStatement(c.statement(1))
-                
+
         elif c := ctx.while_statement():
             while self.visitExpr(c.expr()):
                 self.visitStatement(c.statement())
@@ -68,7 +68,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                 else:
                     output.append("undefined")
             self.print_output(" ".join(output))
-        
+
         elif c := ctx.print_literal():
             output = []
             if c.STRING():
@@ -94,7 +94,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
             return float(s)
 
     def print_output(self, output):
-        print(output)
+        print(output)  # Placeholder for GUI output function
 
 def run_code(code):
     input_stream = InputStream(code)
@@ -104,22 +104,20 @@ def run_code(code):
     tree = parser.program()
 
     interpreter = nscInterpreter()
-    # print(lisp_tree_str)
 
     try:
         interpreter.visit(tree)
-        # print(interpreter.variables)
     except Exception as e:
         logging.error(e.with_traceback())
 
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 2:
-        print("Usage: python your_script.py <input_file>")
+        print("Usage: python interpreter.py <input_file>")
         sys.exit(1)
-    
+
     input_file = sys.argv[1]
     with open(input_file, 'r') as f:
         code = f.read()
-    
+
     run_code(code)
