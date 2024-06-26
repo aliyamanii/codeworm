@@ -13,27 +13,34 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
     def __init__(self):
         self.variables = {}
 
+    # Visit method for identifiers
     def visitIdentifier(self, ctx):
         if ctx.ID():
             return self.variables.get(ctx.ID().getText(), None)
         raise TypeError("Not Implemented Error")
 
+    # Visit method for the program (entry point)
     def visitProgram(self, ctx):
         return self.visitStatements(ctx.statements())
 
+    # Visit method for a list of statements
     def visitStatements(self, ctx):
         for statement in ctx.statement():
             self.visitStatement(statement)
 
+    # Visit method for a single statement
     def visitStatement(self, ctx):
+        # Handle assignment statements
         if c := ctx.assign_statement():
             var_name = c.ID().getText()
             value = self.visitExpr(c.expr())
             self.variables[var_name] = value
 
+        # Handle block statements
         elif c := ctx.begin_end_statement():
             self.visitStatements(c.statements())
 
+        # Handle if-else statements
         elif c := ctx.if_else_statement():
             statements = c.statement()
             if self.visitExpr(c.expr()):
@@ -41,10 +48,12 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
             elif len(statements) > 1:
                 self.visitStatement(c.statement(1))
 
+        # Handle while loop statements
         elif c := ctx.while_statement():
             while self.visitExpr(c.expr()):
                 self.visitStatement(c.statement())
 
+        # Handle for loop statements
         elif c := ctx.for_statement():
             var_name = c.ID().getText()
             start = int(c.NUMBER(0).getText())
@@ -53,6 +62,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                 self.variables[var_name] = i
                 self.visitStatement(c.statement())
 
+        # Handle custom loop statements
         elif c := ctx.loop_statement():
             var_name = c.ID().getText()
             count = int(c.NUMBER().getText())
@@ -60,6 +70,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                 self.variables[var_name] = i
                 self.visitStatement(c.statement())
 
+        # Handle simple print statements
         elif c := ctx.print_simple():
             output = []
             if c.ID():
@@ -70,6 +81,7 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                     output.append("undefined")
             self.print_output(" ".join(output))
 
+        # Handle print statements with literals
         elif c := ctx.print_literal():
             output = []
             if c.STRING():
@@ -82,21 +94,25 @@ class nscInterpreter(NscVisitorImpl, nscVisitor):
                     output.append("undefined")
             self.print_output(" ".join(output))
 
+    # Visit method for IDs (another form)
     def visitID(self, ctx):
         var_name = ctx.getText()
         if var_name in self.variables:
             return self.variables[var_name]
         raise NameError(f"Variable '{var_name}' is not defined")
 
+    # Helper method to convert strings to numbers
     def strToNumber(self, s):
         try:
             return int(s)
         except ValueError:
             return float(s)
-
+        
+    # Helper method to print output
     def print_output(self, output):
         print(output)  # Placeholder for GUI output function
     
+    # Static method to run the interpreter with given code
     @staticmethod
     def run_code(code):
         input_stream = InputStream(code)
